@@ -1,0 +1,24 @@
+{
+  "name": "rest-oauth-client",
+  "version": "0.1.0",
+  "description": "Helps you access oAuth 2.0 authenticated REST-APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmd-johnson/rest-oauth-client.git"
+  },
+  "keywords": [
+    "rest",
+    "oauth",
+    "client"
+  ],
+  "author": "Jonas Auer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cmd-johnson/rest-oauth-client/issues"
+  },
+  "homepage": "https://github.com/cmd-johnson/rest-oauth-client"
+}
