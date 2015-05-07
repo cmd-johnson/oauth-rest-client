@@ -1,7 +1,7 @@
 {
   "name": "oauth-rest-client",
   "version": "0.1.0",
-  "description": "Helps you access oAuth 2.0 authenticated REST-APIs",
+  "description": "Helps you access OAuth 2.0 authenticated REST-APIs",
   "main": "oauth-rest-client.js",
   "scripts": {
     "create-docs": "jsdoc ./ -c ./doc/conf.json",
