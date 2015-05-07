@@ -1,7 +1,7 @@
-# rest-oauth-client
+# Rest-OAuth-Client
 Helps you access OAuth 2.0 authenticated REST-APIs.
 
-==Basic Usage==
+## Basic Usage
 Most commonly you'll want to use this library in combination with express. However, it doesn't depend on anything only provided by express (except a single redirection, I'll change that behavior later to completely decouple this module from express), so you can use it with whatever you like.
 The example uses the express module to set up a simple server that accesses an OAuth 2.0 authenticated REST-API that produces JSON responses, as well as express-session and cookie-parser to save the access-tokens.
 
