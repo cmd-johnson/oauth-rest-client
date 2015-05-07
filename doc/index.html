@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>rest-oauth-client</h1><p>Helps you access OAuth 2.0 authenticated REST-APIs.</p>
+<p>==Basic Usage==
+Most commonly you'll want to use this library in combination with express. However, it doesn't depend on anything only provided by express (except a single redirection, I'll change that behavior later to completely decouple this module from express), so you can use it with whatever you like.
+The example uses the express module to set up a simple server that accesses an OAuth 2.0 authenticated REST-API that produces JSON responses, as well as express-session and cookie-parser to save the access-tokens.</p>
+<p>For a &quot;visual&quot; description of the OAuth 2.0 authorization-code flow, please refer to <a href="http://tools.ietf.org/html/rfc6749#section-4.1">RFC-6749</a>
+I added comments referencing to the steps described in that document (A through E).</p>
+<pre class="prettyprint source lang-javascript"><code>// import used modules
+var express = require('express');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var OauthRestClient = require('oauth-rest-client');
+
+// set up our server
+var app = express();
+app.use(cookieParser());
+app.use(session({
+    secret: 'pssssst!'
+}));
+
+// initialize the client 
+var client = new OauthRestClient({
+    clientId: 'clientId',
+    clientSecret: 'secret',
+    loginUrl: 'https://somewebsite.io/oauth2/login', // the url to redirect the user to when logging in
+    tokenUrl: 'https://somewebsite.io/oauth2/token', // the url to send the authentication token to in order to get the access and refresh tokens
+    callbackUrl: 'http://localhost:3000/oauth2/callback' // the url that the login page should redirect back to
+});
+
+/* (A) */
+// redirect the user to the oauth service login page
+app.get('/sso/login', function(req, res, next) {
+    client.redirectToLogin(res, {
+        response_type: 'code',
+        scope: '', // the scope parameter to set when redirecting the user to the login page of the oauth server
+        state: '' // optional, but recommended, see http://www.thread-safe.com/2014/05/the-correct-use-of-state-parameter-in.html
+    });
+});
+
+/* (B) */
+// only on user-agent side, nothing to do here!
+
+/* (C) */
+// the user returns with the authorization code in the address bar
+app.get('/oauth2/callback', function(req, res) {
+    /* (D) */
+    // we request the access- and (optional) refresh-tokens
+    var urlOptions = {
+        headers: {
+            'Authorization': 'Basic i2o...rEg=' // add some custom headers
+        }
+    };
+    console.log('requesting tokens');
+    // values added to the url request object
+    client.requestTokens(req.query.code, urlOptions, function(err, tokens) {
+        /* (E) */
+        // do something with the returned tokens (i.e. save them or something)
+        if (err) {
+            return; // do some error handling!
+        }
+        req.session.oauthTokens = tokens;
+        res.json(tokens);
+    });
+});
+
+// start our server!
+app.listen(3000);</code></pre></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        oauth-rest-client.js
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Main file of this library. (Actually the only file in here containing code).</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><ul class="dummy"><li>0.1.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li><a href="mailto:jonas.auer.94@gmail.com">Jonas Auer</a></li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="oauth-rest-client.js.html">oauth-rest-client.js</a>, <a href="oauth-rest-client.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+            <h3>Example</h3>
+            
+        <p class="code-caption">Basic usage</p>
+    
+    <pre class="prettyprint"><code>// illustrates the basic usage of this library, for more information on the different function
+// calls, please refer to the corresponding function's documentation
+
+// get the OauthRestClient class
+var OauthRestClient = require('rest-oauth-client');
+// create a new client object
+var client = new OauthRestClient(...);
+
+// call the redirectToLogin function to redirect the user to the oauth login page
+router.get('/oauth2/login', function(req, res) {
+  client.redirectToLogin(res);
+});
+
+// call requestTokens when the user returns from the login page to get the users access token
+router.get('/oauth2/callback', function(req, res, next) {
+  client.requestTokens(...);
+});
+
+// use the oauth tokens of the user to make an authenticated api call
+router.get('/showmesomeinfo', function(req, res, next) {
+  client.request(...);
+});</code></pre>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="OauthRestClient.html">OauthRestClient</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Thu May 07 2015 19:17:17 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
