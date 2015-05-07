@@ -1,9 +1,10 @@
 {
-  "name": "rest-oauth-client",
+  "name": "oauth-rest-client",
   "version": "0.1.0",
   "description": "Helps you access oAuth 2.0 authenticated REST-APIs",
-  "main": "index.js",
+  "main": "oauth-rest-client.js",
   "scripts": {
+    "create-docs": "jsdoc ./ -c ./doc/conf.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,9 @@
   "bugs": {
     "url": "https://github.com/cmd-johnson/rest-oauth-client/issues"
   },
-  "homepage": "https://github.com/cmd-johnson/rest-oauth-client"
+  "homepage": "https://github.com/cmd-johnson/rest-oauth-client",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "request": "^2.55.0"
+  }
 }
